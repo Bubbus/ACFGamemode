@@ -5,7 +5,7 @@ include("lib_gminfo.lua")
 	///
 
 local gm = gminfo.GetGamemodeTable()
-local volumes = gm.SpawnVolumes or error("couldn't find spawn-volumes!")
+local volumes = gm.SpawnVolume or error("couldn't find spawn-volumes!")
 
 ENT.Type = "point"
 
@@ -56,14 +56,15 @@ elseif SERVER then
 
 
 
-	function ENT:SetSpawnVolume(volName)
-		local vol = volumes[volName]
-		if vol and vol.New then
-			self.SpawnVolume = vol:New()
+	function ENT:SetSpawnVolume(vol)
+
+		if vol and vol.Name and volumes[vol.Name] then
+			self.SpawnVolume = vol
 			self.CacheClientUpdate = true
 		else
 			error(tostring(volName) .. " is not a valid spawn volume.")
 		end
+		
 	end
 
 

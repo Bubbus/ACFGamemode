@@ -1,44 +1,51 @@
 
 local this = inherit.NewSubOf()
 this.Name = "FloorCylinder"
+this.Radius = 128
+this.InnerBound = 32
+this.HeightOffset = 128
+
+
+
+if CLIENT then
+	function this:Draw()
+		for yaw = 0, 360, 120 do
+			debugoverlay.Axis( self.Pos, Angle(0, yaw, 0), self.Radius, 0.017, false )
+			debugoverlay.Axis( self.Pos + self.HeightOffset, Angle(0, yaw, 180), self.Radius, 0.017, false )
+		end
+	end
+end
+
 
 
 function this:Init()
-	
-	ErrorNoHalt("Reached the base spawn volume implementation of Init")
 	
 end
 
 
 
-function this:GetSpawnPos()
+function this:GetSpawnPos(ply)
 
-	ErrorNoHalt("Reached the base spawn volume implementation of GetSpawnPos")
+	local randDir = Angle(0, math.random() * 360, 0):Forward()
+	local randDist = (self.Radius - self.InnerBound) * (math.random() ^ 0.5) + self.InnerBound
+	local projectPos = self.Pos + self.HeightOffset + randDir * randDist
 
-	return Vector(0,0,0)
-
+	local trace = util.TraceLine({
+		start = projectPos
+		endpos = projectPos + Vector(0, 0, -self.HeightOffset)
+		mask = MASK_PLAYERSOLID
+	})
+	
+	return trace.HitPos
+	
 end
 
 
 
 function this:PostSpawn(ply, pos)
 
-	ErrorNoHalt("Reached the base spawn volume implementation of PostSpawn")
-
 end
 
-
-
-function this.SetKeyValue(key, val)
-	
-	ErrorNoHalt("Reached the base spawn volume implementation of SetKeyValue")
-	
-	if this[key] == nil then return false end
-	
-	this[key] = val
-	return true
-	
-end
 
 
 local gm = gminfo.GetGamemodeTable()

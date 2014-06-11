@@ -1,6 +1,16 @@
 
 local this = inherit.NewSubOf()
 this.Name = "Base"
+this.Pos = Vector(0,0,0)
+
+
+
+if CLIENT then
+	function this:Draw()
+		debugoverlay.Cross( self.Pos, 12, 0.017, Color(255, 128, 0), false)
+	end
+end
+
 
 
 function this:Init()
@@ -11,7 +21,7 @@ end
 
 
 
-function this:GetSpawnPos()
+function this:GetSpawnPos(ply)
 
 	ErrorNoHalt("Reached the base spawn volume implementation of GetSpawnPos")
 
