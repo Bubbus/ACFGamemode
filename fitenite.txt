@@ -1,0 +1,12 @@
+"fitenite"
+{
+	"base"		"sandbox"
+	"title"		"Fite Nite"
+	"menusystem"	"1"
+
+	"settings"
+	{
+
+	}
+
+}
