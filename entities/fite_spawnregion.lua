@@ -94,6 +94,13 @@ elseif SERVER then
 		self:SetNextThink(CurTime() + 0.25)
 		
 	end
+	
+	
+	
+	
+	function self:UpdateClient()
+		// TODO: this
+	end
 
 
 
@@ -115,5 +122,44 @@ elseif SERVER then
 	function ENT:UpdateTransmitState()	
 		return TRANSMIT_ALWAYS 
 	end
+	
+	
+	
+	
+	function ENT:DoSpawn(ply)
+		if not self.SpawnBinding:IsAvailableTo(ply) then error("Tried spawning " .. tostring(ply) .. " at a spawnpoint unavailable to them.") end
+		
+		local pos, ang = self.SpawnVolume:GetSpawnPos(ply)
+		
+		ply:SetPos(pos)
+		
+		if ang then
+			ply:SetEyeAngles(ang)
+		end
+	end
 
+	
+	
+	
+	function gm.Spawnpoint_OnPlayerSpawn( ply )
+		
+		local spawn = ply:GetNWEntity("FiteSpawn")
+		
+		if not IsValid(spawn) then
+			for k, ent in ents.FindByClass("fite_spawnregion") do
+				if ent:CanPlayerSpawn(ply) then
+					spawn = ent
+					break
+				end
+			end
+			
+			if not IsValid(spawn) then return end
+		end
+		
+		spawn:DoSpawn(ply, self.SpawnBinding)
+		spawn:PostSpawn(ply, self.SpawnBinding)
+		
+	end
+	hook.Add("PlayerSpawn", "Spawnpoint_OnPlayerSpawn", gm.Spawnpoint_OnPlayerSpawn)
+	
 end

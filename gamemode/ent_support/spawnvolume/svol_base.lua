@@ -21,7 +21,7 @@ end
 
 
 
-function this:GetSpawnPos(ply)
+function this:GetSpawn(ply, spawn)
 
 	ErrorNoHalt("Reached the base spawn volume implementation of GetSpawnPos")
 
@@ -31,7 +31,7 @@ end
 
 
 
-function this:PostSpawn(ply, pos)
+function this:PostSpawn(ply, spawn)
 
 	ErrorNoHalt("Reached the base spawn volume implementation of PostSpawn")
 

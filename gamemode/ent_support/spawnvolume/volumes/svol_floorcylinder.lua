@@ -24,7 +24,7 @@ end
 
 
 
-function this:GetSpawnPos(ply)
+function this:GetSpawn(ply, spawn)
 
 	local randDir = Angle(0, math.random() * 360, 0):Forward()
 	local randDist = (self.Radius - self.InnerBound) * (math.random() ^ 0.5) + self.InnerBound
@@ -36,13 +36,13 @@ function this:GetSpawnPos(ply)
 		mask = MASK_PLAYERSOLID
 	})
 	
-	return trace.HitPos
+	return trace.HitPos, -randDir:Angle()
 	
 end
 
 
 
-function this:PostSpawn(ply, pos)
+function this:PostSpawn(ply, spawn)
 
 end
 
