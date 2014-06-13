@@ -5,17 +5,17 @@ this.Pos = Vector(0,0,0)
 
 
 
-if CLIENT then
-	function this:Draw()
-		debugoverlay.Cross( self.Pos, 12, 0.017, Color(255, 128, 0), false)
+//if CLIENT then
+	function this:Draw(duration)
+		debugoverlay.Cross( self.Pos, 12, duration or 0.017, Color(255, 128, 0), false)
 	end
-end
+//end
 
 
 
 function this:Init()
 	
-	ErrorNoHalt("Reached the base spawn volume implementation of Init")
+	ErrorNoHalt("Reached the base spawn volume implementation of Init\n")
 	
 end
 
@@ -23,9 +23,9 @@ end
 
 function this:GetSpawn(ply, spawn)
 
-	ErrorNoHalt("Reached the base spawn volume implementation of GetSpawnPos")
+	ErrorNoHalt("Reached the base spawn volume implementation of GetSpawnPos\n")
 
-	return Vector(0,0,0)
+	return IsValid(spawn) and spawn:GetPos() or Vector(0,0,0)
 
 end
 
@@ -33,19 +33,19 @@ end
 
 function this:PostSpawn(ply, spawn)
 
-	ErrorNoHalt("Reached the base spawn volume implementation of PostSpawn")
+	ErrorNoHalt("Reached the base spawn volume implementation of PostSpawn\n")
 
 end
 
 
 
-function this.SetKeyValue(key, val)
+function this:SetKeyValue(key, val)
 	
-	ErrorNoHalt("Reached the base spawn volume implementation of SetKeyValue")
+	ErrorNoHalt("Reached the base spawn volume implementation of SetKeyValue\n")
 	
-	if this[key] == nil then return false end
+	if self[key] == nil then return false end
 	
-	this[key] = val
+	self[key] = val
 	return true
 	
 end

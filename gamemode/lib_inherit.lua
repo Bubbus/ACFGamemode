@@ -31,9 +31,9 @@ function this.doInherit( child, baseClass )
 	
 	
     if nil ~= baseClass then
-        setmetatable( new_class, { __index = baseClass } )
+        setmetatable( new_class, { __index = baseClass, __call = new_class.__new } )
 	else
-		new_class.__index = new_class
+		setmetatable( new_class, { __call = new_class.__new } )
     end
 
 
@@ -66,11 +66,11 @@ end
 
 
 function this.NewSubOf( base )
-	doInherit(nil, base)
+	return this.doInherit(nil, base)
 end
 
 
 
 function this.SetSuper(child, base)
-	doInherit(child, base)
+	return this.doInherit(child, base)
 end

@@ -7,7 +7,7 @@ local this = gminfo
 /// SHARED
 
 function this.GetGamemodeTable()
-	return FITENITE or error("gememode table has not been initialized.")
+	return FITENITE or error("gamemode table has not been initialized.")
 end
 
 

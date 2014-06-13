@@ -1,7 +1,13 @@
 
 AddCSLuaFile()
 
+FITENITE = FITENITE or {}
+
 include("classbase.lua")
+include("lib_gminfo.lua")
+include("lib_inherit.lua")
+include("aaa_autoincludes.lua")
+include("ent_support/folder.lua")
 
 DeriveGamemode("fretta_fitenite")
 IncludePlayerClasses()
@@ -95,4 +101,4 @@ function GM:CreateTeams()
 	team.SetClass(TEAM_COMRADES, {"Assault", "Engineer", "Tankbuster", "Sniper", "Support"})
 end
 
-print("Loaded sh_init")
+//print("Loaded sh_init")

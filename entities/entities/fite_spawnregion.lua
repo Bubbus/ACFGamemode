@@ -1,4 +1,5 @@
-include("lib_gminfo.lua")
+//include("lib_gminfo.lua")
+AddCSLuaFile()
 
 	///
 	///  SHARED SECTION
@@ -14,7 +15,7 @@ ENT.Type = "point"
 function ENT:CanSpawnPlayer(ply)
 	
 	local spawn = self.SpawnBinding
-	
+	//print("entspawn", tostring(spawn))
 	if not (IsValid(spawn) and spawn.IsAvailableTo) then return false end
 	
 	return spawn:IsAvailableTo(ply)
@@ -33,10 +34,24 @@ if CLIENT then
 
 	function ENT:Initialize()
 
-		self.SpawnVolume = volumes.Default:New()
+		self.SpawnVolume = volumes.Base()
 		self.SpawnBinding = NULL
 
 	end
+	
+	
+	
+	
+	--function ENT:Think()
+	
+		-- if self.SpawnVolume and self.SpawnVolume.Draw then
+			-- self.SpawnVolume:Draw(0.25)
+		-- end
+		
+		-- self:NextThink(CurTime() + 0.25)
+		
+	-- end
+	
 	
 
 elseif SERVER then
@@ -48,9 +63,18 @@ elseif SERVER then
 
 	function ENT:Initialize()
 
-		self.SpawnVolume = volumes.Default:New()
+		self.SpawnVolume = volumes.Base()
 		self.SpawnBinding = NULL
 
+		local setpos = self.SetPos
+		
+		self.SetPos = function(self, pos)
+			setpos(self, pos)
+			self:KeyValue("Pos", self:GetPos())
+		end
+		
+		self:KeyValue("Pos", self:GetPos())
+		
 	end
 
 
@@ -60,6 +84,7 @@ elseif SERVER then
 
 		if vol and vol.Name and volumes[vol.Name] then
 			self.SpawnVolume = vol
+			self:KeyValue("Pos", self:GetPos())
 			self.CacheClientUpdate = true
 		else
 			error(tostring(volName) .. " is not a valid spawn volume.")
@@ -91,14 +116,19 @@ elseif SERVER then
 			self.CacheClientUpdate = false
 		end
 		
-		self:SetNextThink(CurTime() + 0.25)
+		
+		if self.SpawnVolume and self.SpawnVolume.Draw then
+			self.SpawnVolume:Draw(0.25)
+		end
+		
+		self:NextThink(CurTime() + 0.25)
 		
 	end
 	
 	
 	
 	
-	function self:UpdateClient()
+	function ENT:UpdateClient()
 		// TODO: this
 	end
 
@@ -111,7 +141,7 @@ elseif SERVER then
 			error(tostring(ent) .. " is not compatible with the spawnregion entity.")
 		end
 		
-		self.SpawnBinding = entity
+		self.SpawnBinding = ent
 		self.CacheClientUpdate = true
 		
 	end
@@ -127,15 +157,18 @@ elseif SERVER then
 	
 	
 	function ENT:DoSpawn(ply)
+		//print("spone")
 		if not self.SpawnBinding:IsAvailableTo(ply) then error("Tried spawning " .. tostring(ply) .. " at a spawnpoint unavailable to them.") end
 		
-		local pos, ang = self.SpawnVolume:GetSpawnPos(ply)
+		local pos, ang = self.SpawnVolume:GetSpawn(ply, self.SpawnBinding)
 		
 		ply:SetPos(pos)
 		
 		if ang then
 			ply:SetEyeAngles(ang)
 		end
+		
+		self.SpawnVolume:PostSpawn(ply, self.SpawnBinding)
 	end
 
 	
@@ -143,21 +176,23 @@ elseif SERVER then
 	
 	function gm.Spawnpoint_OnPlayerSpawn( ply )
 		
+		//print("sponen")
+		
 		local spawn = ply:GetNWEntity("FiteSpawn")
 		
 		if not IsValid(spawn) then
-			for k, ent in ents.FindByClass("fite_spawnregion") do
-				if ent:CanPlayerSpawn(ply) then
+			for k, ent in pairs(ents.FindByClass("fite_spawnregion")) do
+				//print("sponent", tostring(ent))
+				if ent:CanSpawnPlayer(ply) then
 					spawn = ent
 					break
 				end
 			end
-			
+			//print("spawn", tostring(spawn))
 			if not IsValid(spawn) then return end
 		end
 		
-		spawn:DoSpawn(ply, self.SpawnBinding)
-		spawn:PostSpawn(ply, self.SpawnBinding)
+		spawn:DoSpawn(ply)
 		
 	end
 	hook.Add("PlayerSpawn", "Spawnpoint_OnPlayerSpawn", gm.Spawnpoint_OnPlayerSpawn)
