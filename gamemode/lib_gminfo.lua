@@ -12,6 +12,19 @@ end
 
 
 
+if team then
+	team.GetPlayingTeams = function()
+		ret = team.GetAllTeams()
+		ret[TEAM_CONNECTING] = nil
+		ret[TEAM_SPECTATOR] = nil
+		ret[TEAM_UNASSIGNED] = nil
+		
+		return ret
+	end
+end
+
+
+
 if CLIENT then
 
 elseif SERVER then
